@@ -36,20 +36,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmCadastros = new javax.swing.JMenu();
         jmiCad_Contas = new javax.swing.JMenuItem();
         jmiCad_Usuarios = new javax.swing.JMenuItem();
         jmLancamentos = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jmiVisualizar = new javax.swing.JMenuItem();
         jmRelatorios = new javax.swing.JMenu();
-
-        jMenuItem1.setText("jMenuItem1");
-
-        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SISTEMA CONTROLE FINANCEIRO 1.0");
@@ -69,7 +63,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 339, Short.MAX_VALUE)
+            .addGap(0, 334, Short.MAX_VALUE)
         );
 
         jmCadastros.setText("Cadastros");
@@ -104,8 +98,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jMenuItem2.setText("jMenuItem2");
-        jmLancamentos.add(jMenuItem2);
+        jmiVisualizar.setText("Visualizar");
+        jmiVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiVisualizarActionPerformed(evt);
+            }
+        });
+        jmLancamentos.add(jmiVisualizar);
 
         jMenuBar1.add(jmLancamentos);
 
@@ -157,10 +156,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jmLancamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmLancamentosActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_jmLancamentosActionPerformed
+
+    private void jmiVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiVisualizarActionPerformed
+        // TODO add your handling code here:        
         Lancamentos tela = new Lancamentos();
         jDesktopPane1.add(tela);
         tela.setVisible(true);
-    }//GEN-LAST:event_jmLancamentosActionPerformed
+    }//GEN-LAST:event_jmiVisualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -200,13 +203,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPane1;
     public static javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenu jmCadastros;
     private javax.swing.JMenu jmLancamentos;
     private javax.swing.JMenu jmRelatorios;
     private javax.swing.JMenuItem jmiCad_Contas;
     private javax.swing.JMenuItem jmiCad_Usuarios;
+    private javax.swing.JMenuItem jmiVisualizar;
     // End of variables declaration//GEN-END:variables
 }

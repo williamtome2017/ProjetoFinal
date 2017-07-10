@@ -1,3 +1,2 @@
-excludeFromCopy="${copylibs.excludes}"
-
-linha 843
+INSERT INTO cad_contas (nome_emp, nome_fant, tipo_conta, dt_emissao, dt_vencimento, valor, descricao) 
+VALUES                  ('',      '',        'Selecione...','0.0', '2017-07-07','2017-08-08','')

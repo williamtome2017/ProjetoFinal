@@ -11,17 +11,18 @@ import java.sql.DriverManager;
  * @author William
  */
 public class Conexao {
-    public static void main (String args[]){
-//        try{
-//            Connection con;
-//            String url, user, pass;
-//            url = "jdbc:mysql://localhost:3306/mysql";
-//            user = ;
-//            pass = "";
-//            con = DriverManager.getConnection(url, user, pass);
-//            System.out.println("Deu certo.");
-//        }catch(Exception e){
-//            System.out.println("DEU ERRADO!");
-//        }
-    }
+        public static Connection conecta(){
+        Connection c = null;
+        String url, user, pass;
+        url = "jdbc:mysql://localhost:3306/proj_controle";
+        user = "root";
+        pass = "";
+            try {
+                c = DriverManager.getConnection(url, user, pass);
+                System.out.println("Deu certo.");
+            } catch (Exception ex) {
+                System.out.println("Erro "+ex.getMessage());
+            }        
+            return c;
+        }
 }

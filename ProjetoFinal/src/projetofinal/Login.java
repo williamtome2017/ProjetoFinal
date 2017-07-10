@@ -21,17 +21,18 @@ public class Login extends javax.swing.JInternalFrame {
         try{
             Connection con;
             String url, user, pass;
-            url = "jdbc:mysql://localhost:3306/mysql";
+            url = "jdbc:mysql://localhost:3306/proj_controle";
             user = txtUsuario.getText();
             pass = pwdSenha.getText();
-            if (user.equals("root") && pass.equals("")){
-            con = DriverManager.getConnection(url, user, pass);
-            //System.out.println("CONECTADO.");
-                this.setVisible(false);
-                TelaPrincipal.jMenuBar1.setVisible(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Usuário e/ou senha incorretos.");
-            }
+                try{
+                con = DriverManager.getConnection(url, user, pass);
+                //System.out.println("CONECTADO.");
+                    this.setVisible(false);
+                    TelaPrincipal.jMenuBar1.setVisible(true);
+                }
+                catch(Exception e){
+                    System.out.println("Erro "+e.getMessage());
+                }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "DEU ERRADO. ABRA O WAMP");
         }
