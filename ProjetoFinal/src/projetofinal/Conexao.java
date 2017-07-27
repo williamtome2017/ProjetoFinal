@@ -14,7 +14,7 @@ public class Conexao {
         public static Connection conecta(){
         Connection c = null;
         String url, user, pass;
-        url = "jdbc:mysql://localhost:3306/proj_controle";
+        url = "jdbc:mysql://localhost:3306/proj_controle?useSSL=false";
         user = "root";
         pass = "";
             try {
