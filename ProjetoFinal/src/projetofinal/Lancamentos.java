@@ -5,11 +5,28 @@
  */
 package projetofinal;
 
+import com.itextpdf.text.BaseColor;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,15 +34,27 @@ import javax.swing.table.DefaultTableModel;
  * @author William
  */
 public class Lancamentos extends javax.swing.JInternalFrame {
-
-    /**
+    SimpleDateFormat sfd;
+    
+            
+            /**
      * Creates new form Lancamentos
      */
     public Lancamentos() {
         initComponents();
         setClosable(true); // Botão fechar.
         setIconifiable(true); // Botão minimizar.
-        setMaximizable(true); // Botão maximizar.
+        sfd=new SimpleDateFormat("dd/MM/yyyy");
+        try{
+            dtcData1.setDate(sfd.parse("01/07/2017"));
+        }catch (Exception ee){
+            System.out.println("erro1");
+        }
+        try{
+            dtcData2.setDate(sfd.parse("31/10/2020"));
+        }catch (Exception ee){
+            System.out.println("erro1");
+        }
     }
 
     /**
@@ -42,9 +71,12 @@ public class Lancamentos extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        dtcData1 = new datechooser.beans.DateChooserCombo();
         jLabel3 = new javax.swing.JLabel();
-        dtcData2 = new datechooser.beans.DateChooserCombo();
+        dtcData1 = new com.toedter.calendar.JDateChooser();
+        dtcData2 = new com.toedter.calendar.JDateChooser();
+        jLabel4 = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JTextField();
+        btnRelatório = new javax.swing.JButton();
 
         setTitle("Lançamentos");
 
@@ -68,11 +100,20 @@ public class Lancamentos extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setText("Pesquisar pela Data:");
+        jLabel1.setText("Pesquisar:");
 
         jLabel2.setText("DE:");
 
         jLabel3.setText("ATÉ");
+
+        jLabel4.setText("TOTAL:");
+
+        btnRelatório.setText("Gerar Relatório");
+        btnRelatório.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRelatórioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,39 +122,51 @@ public class Lancamentos extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(dtcData1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(dtcData2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(dtcData1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(dtcData2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(66, 66, 66)
+                                .addComponent(btnRelatório, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel3))
+                    .addComponent(dtcData1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dtcData2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addComponent(dtcData1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(dtcData2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(btnRelatório, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -125,52 +178,225 @@ public class Lancamentos extends javax.swing.JInternalFrame {
         c = Conexao.conecta();
         Statement stmt;
         Object[] colunas = new Object[5];        
+        
         Object[][] linhas;
+        
+        //converte as datas em string para fazer a comparação se eles estão vazios.
+        //e exibe uma mensagem caso o usuário pesquise sem preencher as datas do filtro.        
+        String a =((JTextField)dtcData1.getDateEditor().getUiComponent()).getText();
+        String b =((JTextField)dtcData2.getDateEditor().getUiComponent()).getText();
+        if(a.equals("")){
+            JOptionPane.showMessageDialog(null, "Por favor, preencha a primeiro campo de data!");
+            return;
+        }
+        if(b.equals("")){
+            JOptionPane.showMessageDialog(null, "Por favor, preencha a segundo campo de data!");
+            return;
+        }
+        
         try {
             stmt = c.createStatement();
-            Object data1 = dtcData1.getDateFormat();
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            //formatar as datas capturadas.
+            Object data1 = dtcData1.getDate();
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
             String dt1 = formato.format(data1);
-            Object data2 = dtcData2.getDateFormat();
-            SimpleDateFormat formato2 = new SimpleDateFormat("dd/MM/yyyy");
+            Object data2 = dtcData2.getDate();
+            SimpleDateFormat formato2 = new SimpleDateFormat("yyyy-MM-dd");
             String dt2 = formato2.format(data2);
+            
             String consulta;
-            consulta="SELECT * FROM cad_contas WHERE dt_vencimento BEETWEEN '"+dt1+"' AND '"+dt2+"';";
+            consulta="SELECT date_format(dt_vencimento, \"%d/%m/%y\") as dd,"
+                    + " nome_fant, valor, descricao FROM cad_contas "
+                    + " WHERE dt_vencimento BETWEEN '"+dt1+"' AND '"+dt2+"';";
+            
+            System.out.println("AAA "+consulta);
             ResultSet rs;
             rs = stmt.executeQuery(consulta);
             rs.last();
             linhas = new Object[rs.getRow()][5];
             rs.beforeFirst();
-            colunas[0]="dt_vencimento";
-            colunas[1]="nome_fant";
-            colunas[2]="valor";
-            colunas[3]="valor";
-            colunas[4]="descricao";
             int i=0;
+            float vtotal = 0;
             while (rs.next()){
-                linhas[i][0]=rs.getString("dt_vencimento");
+                linhas[i][0]=rs.getString("dd");
                 linhas[i][1]=rs.getString("nome_fant");
                 linhas[i][2]=rs.getString("valor");
                 linhas[i][3]=rs.getString("valor");
                 linhas[i][4]=rs.getString("descricao");
                 i++;
+                vtotal = vtotal + rs.getFloat("valor");
             }
+            txtTotal.setText(String.valueOf(vtotal));
             jTable1.setModel(new DefaultTableModel(linhas,colunas));
+            jTable1.getColumnModel().getColumn(0).setHeaderValue("VENCIMENTO");
+            jTable1.getColumnModel().getColumn(1).setHeaderValue("NOME FANTASIA");
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("VL. LANÇADO");
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("VL. TOTAL");
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("DESCRIÇÃO");
+            TelaPrincipal.jmiGerarRelat.setEnabled(true);
         } catch (SQLException ex) {
             System.out.println("Erro "+ex.getMessage());
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnRelatórioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatórioActionPerformed
+        // TODO add your handling code here:
+        int i=0;
+        Connection c;
+        c = Conexao.conecta();
+        Statement stmt;
+        Object[] colunas = new Object[5];        
+        Object[][] linhas;
+        try {
+            stmt = c.createStatement();
+            //formatar as datas capturadas.
+            Object data1 = dtcData1.getDate();
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            String dt1 = formato.format(data1);
+            Object data2 = dtcData2.getDate();
+            SimpleDateFormat formato2 = new SimpleDateFormat("yyyy-MM-dd");
+            String dt2 = formato2.format(data2);
+            
+            String consulta;
+            consulta="SELECT date_format(dt_vencimento, \"%d/%m/%y\") as dd,"
+                    + " nome_fant, valor, descricao FROM cad_contas "
+                    + " WHERE dt_vencimento BETWEEN '"+dt1+"' AND '"+dt2+"';";
+            
+            System.out.println("AAA "+consulta);
+            ResultSet rs;
+            rs = stmt.executeQuery(consulta);
+            rs.last();
+            linhas = new Object[rs.getRow()][5];
+            rs.beforeFirst();
+            float vtotal = 0;
+            while (rs.next()){
+                linhas[i][0]=rs.getString("dd");
+                linhas[i][1]=rs.getString("nome_fant");
+                linhas[i][2]=rs.getString("valor");
+                linhas[i][3]=rs.getString("valor");
+                linhas[i][4]=rs.getString("descricao");
+                i++;
+                vtotal = vtotal +rs.getFloat("valor");
+            }
+            String labelvalor = jLabel4.getText();
+            txtTotal.setText(String.valueOf(vtotal));
+            jTable1.setModel(new DefaultTableModel(linhas,colunas));
+            
+        Document doc = null;
+        OutputStream os = null;	
+        try {
+            //cria o documento tamanho A4, margens de 2,54cm
+            doc = new Document(PageSize.A4, 72, 72, 72, 72);	
+            //cria a stream de saída
+            long dd;
+            dd = System.currentTimeMillis();
+            os = new FileOutputStream(dd+".pdf");
+			
+            //associa a stream de saída ao 
+            PdfWriter.getInstance(doc, os);
+			
+            //abre o documento
+            doc.open();
+
+            //adiciona o texto ao PDF
+            //Paragraph p = new Paragraph("Meu primeiro arquivo PDF!");
+            //doc.add(p);
+            PdfPTable table = new PdfPTable(5);
+            PdfPCell header = new PdfPCell(new Paragraph("Relatório de Dívidas para Pagar"));
+            
+            header.setColspan(5);
+            header.setBackgroundColor(BaseColor.YELLOW);
+            header.setBorderWidthBottom(2.0f);
+            header.setBorderColorBottom(BaseColor.BLUE);
+            header.setBorder(Rectangle.BOTTOM);
+            
+            
+            table.addCell(header);	
+//            table.addCell("abstract");
+//            table.addCell("extends");
+//            table.addCell("import");
+//            table.addCell("while");
+//            table.addCell("if");
+//            table.addCell("switch");
+            int ccc=0;
+            int a=0;
+            int ll=0;
+            System.out.println("i="+i);
+            for (int i2 = 0; i2 < (i*5); i2++) {
+                //PdfPCell cc = new PdfPCell(new Paragraph(" "+i2));
+                PdfPCell cc = new PdfPCell(new Paragraph(" "+linhas[ll][ccc]));
+                System.out.println("ll A "+ll +" "+ccc);
+                System.out.println("............"+linhas[ll][0]+" "+linhas[ll][1]+" "+linhas[ll][2]+" "+linhas[ll][3]+" "+linhas[ll][4]);
+                if (a<5){
+                    cc.setBackgroundColor(BaseColor.GREEN);
+                    a++;
+                }else{
+                    cc.setBackgroundColor(BaseColor.WHITE);
+                    a++;
+                }
+                if(a==10){
+                    a=0;
+                }
+                table.addCell(cc);
+                if((i2+1)%5==0)
+                    ll++;
+                ccc++;
+                if(ccc==5)
+                    ccc=0;
+                
+            }
+           PdfPCell cc = new PdfPCell(new Paragraph("TOTAL: "+vtotal));
+           
+           cc.setColspan(5);
+           cc.setBackgroundColor(BaseColor.YELLOW);
+           cc.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+           cc.setBorderWidthBottom(2.0f);
+           cc.setBorderColorBottom(BaseColor.BLUE);
+           cc.setBorder(Rectangle.BOTTOM);
+           table.addCell(cc);
+            
+           doc.add(table);
+            
+        }
+        catch (FileNotFoundException | DocumentException ee){
+            System.out.println(" Erro ");
+
+        } finally {
+            if (doc != null) {
+                //fechamento do documento
+                doc.close();
+            }
+            if (os != null) {
+                try {
+                    //fechamento da stream de saída
+                    os.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Lancamentos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+            
+            
+            
+        } catch (SQLException ex) {
+            System.out.println("Erro "+ex.getMessage());
+        }
+        
+    }//GEN-LAST:event_btnRelatórioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private datechooser.beans.DateChooserCombo dtcData1;
-    private datechooser.beans.DateChooserCombo dtcData2;
+    private javax.swing.JButton btnRelatório;
+    private com.toedter.calendar.JDateChooser dtcData1;
+    private com.toedter.calendar.JDateChooser dtcData2;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    public static javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable jTable1;
+    public static javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

@@ -44,6 +44,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jmLancamentos = new javax.swing.JMenu();
         jmiVisualizar = new javax.swing.JMenuItem();
         jmRelatorios = new javax.swing.JMenu();
+        jmiGerarRelat = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SISTEMA CONTROLE FINANCEIRO 1.0");
@@ -63,7 +64,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 339, Short.MAX_VALUE)
         );
 
         jmCadastros.setText("Cadastros");
@@ -109,6 +110,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuBar1.add(jmLancamentos);
 
         jmRelatorios.setText("Relatórios");
+        jmRelatorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmRelatoriosActionPerformed(evt);
+            }
+        });
+
+        jmiGerarRelat.setText("Gerar Relatório");
+        jmiGerarRelat.setEnabled(false);
+        jmiGerarRelat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiGerarRelatActionPerformed(evt);
+            }
+        });
+        jmRelatorios.add(jmiGerarRelat);
+
         jMenuBar1.add(jmRelatorios);
 
         setJMenuBar(jMenuBar1);
@@ -165,6 +181,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tela.setVisible(true);
     }//GEN-LAST:event_jmiVisualizarActionPerformed
 
+    private void jmiGerarRelatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiGerarRelatActionPerformed
+        // TODO add your handling code here:
+        Relatorios tela = new Relatorios();
+        jDesktopPane1.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_jmiGerarRelatActionPerformed
+
+    private void jmRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRelatoriosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmRelatoriosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -205,9 +232,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public static javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jmCadastros;
     private javax.swing.JMenu jmLancamentos;
-    private javax.swing.JMenu jmRelatorios;
+    public static javax.swing.JMenu jmRelatorios;
     private javax.swing.JMenuItem jmiCad_Contas;
     private javax.swing.JMenuItem jmiCad_Usuarios;
+    public static javax.swing.JMenuItem jmiGerarRelat;
     private javax.swing.JMenuItem jmiVisualizar;
     // End of variables declaration//GEN-END:variables
 }
